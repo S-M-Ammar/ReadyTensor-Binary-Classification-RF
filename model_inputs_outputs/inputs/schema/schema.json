@@ -1,0 +1,67 @@
+{
+    "title": "Titanic dataset",
+    "summary": "Titanic dataset for binary classification",
+    "modelCategory": "binary_classification",
+    "schemaVersion": 1.0,
+    "inputDataFormat": "CSV",
+    "id": {
+      "name": "PassengerId",
+      "description": "unique identifier"
+    },
+    "target": {
+      "name": "Survived",
+      "description": "binary class (0 or 1)",
+      "classes": ["0", "1"]
+    },
+    "features": [
+      {
+        "name": "Pclass",
+        "description": "Ticket Class",
+        "dataType": "CATEGORICAL",
+        "categories": ["1", "2", "3"],
+        "nullable": true
+      },
+      {
+        "name": "Sex",
+        "description": "Passenger Gender",
+        "dataType": "CATEGORICAL",
+        "categories": ["male", "female"],
+        "nullable": true
+      },
+      {
+        "name": "Age",
+        "description": "Passenger Age",
+        "dataType": "NUMERIC",
+        "example": 32,
+        "nullable": true
+      },
+      {
+        "name": "SibSp",
+        "description": "# of siblings / spouses aboard the Titanic",
+        "dataType": "NUMERIC",
+        "example": 1,
+        "nullable": true
+      },
+      {
+        "name": "Parch",
+        "description": "# of parents / children aboard the Titanic",
+        "dataType": "NUMERIC",
+        "example": 0,
+        "nullable": true
+      },
+      {
+        "name": "Fare",
+        "description": "Travel Cost",
+        "dataType": "NUMERIC",
+        "example": 120,
+        "nullable": true
+      },
+      {
+        "name": "Embarked",
+        "description": "Port of Embarkation",
+        "dataType": "CATEGORICAL",
+        "categories": ["male", "female"],
+        "nullable": true
+      }
+    ]
+  }
