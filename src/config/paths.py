@@ -21,6 +21,22 @@ TRAIN_DIR = os.path.join(DATA_DIR, "training")
 # Path to test directory inside data directory
 TEST_DIR = os.path.join(DATA_DIR, "testing")
 
+# Path to model directory
+MODEL_PATH = os.path.join(MODEL_INPUTS_OUTPUTS, "model")
+# Path to artifacts directory inside model directory
+MODEL_ARTIFACTS_PATH = os.path.join(MODEL_PATH, "artifacts")
+# Path to saved schema in artifacts directory
+SAVED_SCHEMA_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "schema")
+
+
+# Paths inside the source directory
+# Path to source directory
+SRC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Path to config directory
+CONFIG_DIR = os.path.join(SRC_DIR, "config")
+# Path to model config
+MODEL_CONFIG_FILE_PATH = os.path.join(CONFIG_DIR, "model_config.json")
+
 # print("ROOT : ",ROOT_DIR)
 
 # print("MODEL_INPUTS_OUTPUTS : ",MODEL_INPUTS_OUTPUTS)

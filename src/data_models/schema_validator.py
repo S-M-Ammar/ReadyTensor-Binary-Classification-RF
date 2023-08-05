@@ -59,11 +59,25 @@ class Feature(BaseModel):
     name: str
     description: str
     dataType: DataType
-    nullable: bool
     example: Optional[float]
     categories: Optional[List[str]]
+    nullable: bool
 
-    @validator("example", always=True, allow_reuse=True)
+
+    # @validator("dataType")
+    # def check_categorical_or_numerica(cls,v,values):
+    #     print(values)
+    #     if("categories" in values.keys()):
+    #         print(values)
+    #     elif("example" in values.keys()):
+    #         pass
+    #     else:
+    #         pass
+
+    #     return v
+
+
+    @validator("example",always=True, allow_reuse=True )
     def example_is_present_with_data_type_is_numeric(cls, v, values):
         data_type = values.get("dataType")
         if data_type == "NUMERIC" and v is None:
@@ -73,8 +87,10 @@ class Feature(BaseModel):
             )
         return v
 
-    @validator("categories", always=True, allow_reuse=True)
+    @validator("categories",always=True, allow_reuse=True )
     def categories_are_present_with_data_type_is_categorical(cls, v, values):
+        # print(v)
+        # print(values)
         data_type = values.get("dataType")
         if data_type == "CATEGORICAL" and v is None:
             raise ValueError(
@@ -85,18 +101,23 @@ class Feature(BaseModel):
 
     @validator("categories", always=True, allow_reuse=True)
     def categories_are_non_empty_strings(cls, v, values):
-        categories = values.get("categories")
-        if categories is not None:
-            if len(categories) == 0:
+        # print(v)
+        # print(values)
+        if v is not None:
+            if len(v) == 0:
                 raise ValueError(
                     f"`categories` must not be empty. Check field: {values}"
                 )
-            for category in categories:
+            for category in v:
                 if str(category) == "" or not isinstance(category, str):
                     raise ValueError(
                         f"`categories` must be a list of strings. Check field: {values}"
                     )
-        return v
+            return v
+        else:
+            raise ValueError(
+                        f"`categories` must not be empty. Check field: {values}"
+                    )
 
 
 class SchemaModel(BaseModel):
@@ -170,5 +191,7 @@ def validate_schema_dict(schema_dict: dict) -> dict:
     try:
         schema_dict = SchemaModel.parse_obj(schema_dict).dict()
         return schema_dict
+    except Exception as e:
+        print(e)
     except ValidationError as exc:
         raise ValueError(f"Invalid schema: {exc}") from exc
