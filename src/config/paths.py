@@ -27,6 +27,12 @@ MODEL_PATH = os.path.join(MODEL_INPUTS_OUTPUTS, "model")
 MODEL_ARTIFACTS_PATH = os.path.join(MODEL_PATH, "artifacts")
 # Path to saved schema in artifacts directory
 SAVED_SCHEMA_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "schema")
+# Name of the preprocessing pipeline file
+PREPROCESSING_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "preprocessing")
+# Name of the predictor model file inside artifacts directory
+PREDICTOR_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "predictor")
+# Name of the explainer file inside artifacts directory
+EXPLAINER_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "explainer")
 
 
 # Paths inside the source directory

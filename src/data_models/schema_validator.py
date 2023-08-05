@@ -77,7 +77,7 @@ class Feature(BaseModel):
     #     return v
 
 
-    @validator("example",always=True, allow_reuse=True )
+    @validator("example")
     def example_is_present_with_data_type_is_numeric(cls, v, values):
         data_type = values.get("dataType")
         if data_type == "NUMERIC" and v is None:
@@ -87,7 +87,7 @@ class Feature(BaseModel):
             )
         return v
 
-    @validator("categories",always=True, allow_reuse=True )
+    @validator("categories")
     def categories_are_present_with_data_type_is_categorical(cls, v, values):
         # print(v)
         # print(values)
@@ -99,7 +99,7 @@ class Feature(BaseModel):
             )
         return v
 
-    @validator("categories", always=True, allow_reuse=True)
+    @validator("categories")
     def categories_are_non_empty_strings(cls, v, values):
         # print(v)
         # print(values)
