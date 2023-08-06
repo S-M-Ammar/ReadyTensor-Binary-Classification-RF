@@ -4,6 +4,7 @@ from xai.logger import get_logger, log_error
 from data_models.data_validator import validate_data
 from schema.data_schema import load_json_data_schema, save_schema
 from utils import read_csv_in_directory, read_json_as_dict, set_seeds, split_train_val
+from preprocessing_data.pipeline import data_preprocessing_base
 
 logger = get_logger(task_name="train")
 
@@ -44,8 +45,9 @@ def run_training(
         train_split, val_split = split_train_val(
             validated_data, val_pct=model_config["validation_split"]
         )
-        
-
+  
+        data_preprocessing_instance = data_preprocessing_base(train_data, data_schema.categorical_features , data_schema.numeric_features , data_schema.target , is_training_data=True)
+        print(data_preprocessing_instance.preprocess_categorical_data())
         
 
 

@@ -21,12 +21,15 @@ TRAIN_DIR = os.path.join(DATA_DIR, "training")
 # Path to test directory inside data directory
 TEST_DIR = os.path.join(DATA_DIR, "testing")
 
+
 # Path to model directory
 MODEL_PATH = os.path.join(MODEL_INPUTS_OUTPUTS, "model")
 # Path to artifacts directory inside model directory
 MODEL_ARTIFACTS_PATH = os.path.join(MODEL_PATH, "artifacts")
 # Path to saved schema in artifacts directory
 SAVED_SCHEMA_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "schema")
+# Path to data artifacts such as encoders, imputators 
+DATA_ARTIFACTS_DIR_PATH = os.path.join(MODEL_PATH, "artifacts")
 # Name of the preprocessing pipeline file
 PREPROCESSING_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "preprocessing")
 # Name of the predictor model file inside artifacts directory

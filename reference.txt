@@ -1,7 +1,7 @@
 https://docs.readytensor.ai/for-users/evaluating-and-using-models/binary-classification
 https://python.plainenglish.io/data-validation-building-data-validating-classes-with-pydantic-8ee4a023f26d
 https://github.com/readytensor/rt_bin_class_decision_tree_sklearn_shapley/blob/main/src/train.py
-
+https://saturncloud.io/blog/how-to-put-customized-functions-in-sklearn-pipeline/
 
 
 // {
