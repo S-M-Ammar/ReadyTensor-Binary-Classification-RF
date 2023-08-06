@@ -82,7 +82,6 @@ def load_categorical_imputor(path):
         raise f"Error while loading one hot encoder : {e}"
 
 
-
 def get_numeric_columns_with_missing_value_threshold(numeric_data,numeric_columns,total_records,threshold):
     try:
         columns_to_be_considered = []
@@ -99,9 +98,29 @@ def get_numeric_columns_with_missing_value_threshold(numeric_data,numeric_column
 def load_numeric_imputor(path):
     try:
         numeric_imputor = joblib.load(path+"/numeric_imputer.joblib")
-        return load_categorical_imputor
+        return numeric_imputor
     except Exception as e:
-        raise f"Error while loading one hot encoder : {e}"
+        raise f"Error while loading numeric imputor : {e}"
+
+def load_min_max_scaler(path):
+    try:
+        min_max_scaler = joblib.load(path+"/min_max_scaler.joblib")
+        return min_max_scaler
+    except Exception as e:
+        raise f"Error while loading min max scaler : {e}"
+
+def save_numeric_imputor(numeric_imputor , path):
+    try:
+        joblib.dump(numeric_imputor, path+"/numeric_imputer.joblib")
+    except Exception as e:
+        raise f"Error while saving numeric imputor : {e}"
+
+def sav_min_max_scaler(min_max_scaler , path):
+    try:
+        joblib.dump(min_max_scaler, path+"/min_max_scaler.joblib")
+    except Exception as e:
+        raise f"Error while saving min max scaler : {e}"
+
 
 
 def cast_to_object_numeric_columns(numeric_data):
@@ -126,6 +145,25 @@ def perform_numeric_imputation(numeric_imputer , numeric_data):
 
 
 
-def perfrom_min_max_scaling():
-    pass
+def perfrom_min_max_scaling(min_max_scaler , numeric_data):
+    try:
+        min_max_scaler.fit(numeric_data)
+        numeric_data = pd.DataFrame(min_max_scaler.transform(numeric_data), columns=numeric_data.columns)
+        return min_max_scaler , numeric_data
+    except Exception as e:
+        raise f"Error occured while performing min max scaling : {e}"
+
+
+def initiate_processing_pipeline(pipeline , data):
+    try:
+        pipeline.fit(data)
+        return pipeline , pipeline.transform(data)
+    except Exception as e:
+        raise f"Error occured while intiating pipeline : {e}"
+    
+
+
+
+
+
 

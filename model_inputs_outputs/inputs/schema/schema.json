@@ -45,8 +45,8 @@
       {
         "name": "Parch",
         "description": "# of parents / children aboard the Titanic",
-        "dataType": "NUMERIC",
-        "example": 0,
+        "dataType": "CATEGORICAL",
+        "categories": ["0","1","2","3","4","5","6"],
         "nullable": true
       },
       {

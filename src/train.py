@@ -4,7 +4,10 @@ from xai.logger import get_logger, log_error
 from data_models.data_validator import validate_data
 from schema.data_schema import load_json_data_schema, save_schema
 from utils import read_csv_in_directory, read_json_as_dict, set_seeds, split_train_val
-from preprocessing_data.pipeline import data_preprocessing_base
+from preprocessing_data.preprocessing_utils import initiate_processing_pipeline
+from preprocessing_data.pipeline import CategoricalTransformer , NumericTransformer
+from sklearn.pipeline import Pipeline
+import pandas as pd
 
 logger = get_logger(task_name="train")
 
@@ -45,9 +48,21 @@ def run_training(
         train_split, val_split = split_train_val(
             validated_data, val_pct=model_config["validation_split"]
         )
-  
-        data_preprocessing_instance = data_preprocessing_base(train_data, data_schema.categorical_features , data_schema.numeric_features , data_schema.target , is_training_data=True)
-        print(data_preprocessing_instance.preprocess_categorical_data())
+
+        pipeline_categorical = Pipeline([
+                                ('CategoricalTransformer', CategoricalTransformer(data_schema.categorical_features,True))
+                            ])
+        
+        pipeline_numeric = Pipeline([
+                                ('NumericTransformer', NumericTransformer(data_schema.numeric_features,True))
+                            ])
+        pipeline_categorical , transformed_data_categorical = initiate_processing_pipeline(pipeline_categorical , train_data)
+        pipeline_numeric , transformed_data_numeric = initiate_processing_pipeline(pipeline_numeric , train_data)
+        train_columns = list(transformed_data_categorical.columns) + list(transformed_data_numeric.columns)
+        train_data = pd.concat([transformed_data_categorical,transformed_data_numeric],axis=1,ignore_index=True)
+        train_data.columns = train_columns
+        print(train_data)
+
         
 
 
