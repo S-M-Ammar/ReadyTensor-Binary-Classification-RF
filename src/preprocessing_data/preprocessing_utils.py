@@ -187,17 +187,25 @@ def initiate_processing_pipeline(pipeline , data):
 
 def save_pipeline(pipeline , tag):
     try:
-        if(tag!="train" and tag!="test"):
-            raise f"Error occured while saving pipeline : Invalid Tag"
-        elif(tag=="train"):
-            joblib.dump(pipeline,paths.DATA_ARTIFACTS_DIR_PATH+"/train_pipeline.joblib")
-        else:
-            joblib.dump(pipeline,paths.DATA_ARTIFACTS_DIR_PATH+"/test_pipeline.joblib")   
+        joblib.dump(pipeline , paths.DATA_ARTIFACTS_DIR_PATH+"/"+tag+"_pipeline.joblib")
     except Exception as e:
+        print(e)
         raise f"Error occured while saving pipeline : {e}"
 
 
+def load_pipeline(pipeline , tag):
+    try:
+        return joblib.load(pipeline,paths.DATA_ARTIFACTS_DIR_PATH+"/"+tag+"_pipeline.joblib")
+    except Exception as e:
+        raise f"Error occured while saving pipeline : {e}"
 
-
-
-
+def compile_pipeline(pipeline_categorical , pipeline_numeric , data):
+    pipeline_categorical , transformed_data_categorical = initiate_processing_pipeline(pipeline_categorical , data)
+    pipeline_numeric , transformed_data_numeric = initiate_processing_pipeline(pipeline_numeric , data)
+    transformed_data_categorical.reset_index(drop=True,inplace=True)
+    transformed_data_numeric.reset_index(drop=True,inplace=True)
+    columns = list(transformed_data_categorical.columns) + list(transformed_data_numeric.columns)
+    processed_data = pd.concat([transformed_data_categorical,transformed_data_numeric],axis=1,ignore_index=True)
+    processed_data.columns = columns
+    return pipeline_categorical , pipeline_numeric , processed_data
+    

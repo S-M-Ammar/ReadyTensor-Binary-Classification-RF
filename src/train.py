@@ -1,10 +1,10 @@
 import argparse
 from config import paths
-from xai.logger import get_logger, log_error
+from logger import get_logger, log_error
 from data_models.data_validator import validate_data
 from schema.data_schema import load_json_data_schema, save_schema
 from utils import read_csv_in_directory, read_json_as_dict, set_seeds, split_train_val
-from preprocessing_data.preprocessing_utils import initiate_processing_pipeline
+from preprocessing_data.preprocessing_utils import initiate_processing_pipeline , compile_pipeline ,save_pipeline
 from preprocessing_data.pipeline import CategoricalTransformer , NumericTransformer
 from sklearn.pipeline import Pipeline
 import pandas as pd
@@ -49,34 +49,38 @@ def run_training(
             validated_data, val_pct=model_config["validation_split"]
         )
 
-        # train_pipeline_categorical = Pipeline([
-        #                         ('CategoricalTransformer', CategoricalTransformer(data_schema.categorical_features,True))
-        #                     ])
+        train_pipeline_categorical = Pipeline([
+                                              ('CategoricalTransformer', CategoricalTransformer(data_schema.categorical_features,True))
+                                             ])
         
-        # train_pipeline_numeric = Pipeline([
-        #                         ('NumericTransformer', NumericTransformer(data_schema.numeric_features,True))
-        #                     ])
-        
-        # train_pipeline_categorical , train_transformed_data_categorical = initiate_processing_pipeline(train_pipeline_categorical , train_data)
-        # train_pipeline_numeric , train_transformed_data_numeric = initiate_processing_pipeline(train_pipeline_numeric , train_data)
-        # train_columns = list(train_transformed_data_categorical.columns) + list(train_transformed_data_numeric.columns)
-        # train_data = pd.concat([train_transformed_data_categorical,train_transformed_data_numeric],axis=1,ignore_index=True)
-        # train_data.columns = train_columns
-
-        # X_train = train_data
-        # Y_train = train_split[[data_schema.target]]
-
+        train_pipeline_numeric = Pipeline([
+                                            ('NumericTransformer', NumericTransformer(data_schema.numeric_features,True))
+                                          ])
         
         test_val_pipeline_categorical = Pipeline([
                                                    ('CategoricalTransformer', CategoricalTransformer(data_schema.categorical_features,False))
                                                 ])
         
-        test_val_pipeline_numerical = Pipeline([
+        test_val_pipeline_numeric = Pipeline([
                                                    ('NumericTransformer', NumericTransformer(data_schema.numeric_features,False))
                                                ])
+        train_pipeline_categorical , train_pipeline_numeric , processed_train_data = compile_pipeline(train_pipeline_categorical , train_pipeline_numeric , train_split)
+        test_val_pipeline_categorical , test_val_pipeline_numeric , processed_test_val_data = compile_pipeline(test_val_pipeline_categorical , test_val_pipeline_numeric , val_split)
+
+        save_pipeline(train_pipeline_categorical , "train_categorical")
+        save_pipeline(train_pipeline_numeric , "train_numeric")
+        save_pipeline(test_val_pipeline_categorical,"test_val_categorical")
+        save_pipeline(test_val_pipeline_numeric , "test_val_numeric")
         
-        test_val_pipeline , test_val_transformed_data_categorical = initiate_processing_pipeline(test_val_pipeline_categorical , val_split)
-        print(test_val_transformed_data_categorical)
+
+        # X_train = train_data
+        # Y_train = train_split[[data_schema.target]]
+
+        
+   
+        
+        # test_val_pipeline , test_val_transformed_data_categorical = initiate_processing_pipeline(test_val_pipeline_categorical , val_split)
+        # print(test_val_transformed_data_categorical)
         # test_val_pipeline_numeric , test_val_transformed_data_numeric = initiate_processing_pipeline(test_val_pipeline_numerical , val_split)
         
 
