@@ -3,7 +3,7 @@ import joblib
 import pandas as pd
 import numpy as np
 from config import paths
-
+import json
 
 def get_categorical_columns_with_missing_value_threshold(categorical_data,categorical_columns,total_records,threshold):
     try:
@@ -18,24 +18,35 @@ def get_categorical_columns_with_missing_value_threshold(categorical_data,catego
     except Exception as e:
         raise f"Error occurs while calculating categorical missing values : {e}"
 
-def save_categorical_imputer(categorical_imputer,path):
+def save_categorical_imputer(categorical_imputer):
     try:
-        joblib.dump(categorical_imputer, path+'/categorical_imputer.joblib')
+        joblib.dump(categorical_imputer,paths.DATA_ARTIFACTS_DIR_PATH+'/categorical_imputer.joblib')
     except Exception as e:
         raise f"Error occurs while saving categorical imputor  : {e}"
 
-def save_one_hot_encoder(one_hot_encoder,path):
+def save_one_hot_encoder(one_hot_encoder):
     try:
-        joblib.dump(one_hot_encoder, path+'/one_hot_encoder.joblib')
+        joblib.dump(one_hot_encoder, paths.DATA_ARTIFACTS_DIR_PATH+'/one_hot_encoder.joblib')
     except Exception as e:
         raise f"Error occurs while saving one hot encoder : {e}"
     
-def save_categorical_columns_to_be_considered(categorical_columns_to_be_considered,path):
+def save_categorical_columns_to_be_considered(categorical_columns_to_be_considered):
     try:
+        
         context = {"columns":categorical_columns_to_be_considered}
-        joblib.dump(context,path+'/categorical_context.joblib')
+        joblib.dump(context,paths.DATA_ARTIFACTS_DIR_PATH+'/categorical_context.joblib')
+        
     except Exception as e:
         raise f"Error while saving categorical columns context : {e}"
+    
+def load_categorical_columns_to_be_considered():
+    try:
+        
+        context = joblib.load(paths.DATA_ARTIFACTS_DIR_PATH+'/categorical_context.joblib')
+        return context['columns']
+        
+    except Exception as e:
+        return []
 
 def cast_to_object_categorical_columns(categorical_data):
     try:
@@ -66,18 +77,18 @@ def perform_one_hot_encoder(one_hot_encoder , categorical_data):
     except Exception as e:
         raise f"Error occurs while performing one hot encoding : {e}"
 
-def load_one_hot_encoder(path):
+def load_one_hot_encoder():
     try:
-        one_hot_encoder = joblib.load(path+"/one_hot_encoder.joblib")
+        one_hot_encoder = joblib.load(paths.DATA_ARTIFACTS_DIR_PATH+"/one_hot_encoder.joblib")
         return one_hot_encoder
     except Exception as e:
         raise f"Error while loading one hot encoder : {e}"
     
 
-def load_categorical_imputor(path):
+def load_categorical_imputor():
     try:
-        categorical_imputor = joblib.load(path+"/categorical_imputer.joblib")
-        return load_categorical_imputor
+        categorical_imputor = joblib.load(paths.DATA_ARTIFACTS_DIR_PATH+"/categorical_imputer.joblib")
+        return categorical_imputor
     except Exception as e:
         raise f"Error while loading one hot encoder : {e}"
 
@@ -95,32 +106,45 @@ def get_numeric_columns_with_missing_value_threshold(numeric_data,numeric_column
     except Exception as e:
         raise f"Error occurs while calculating numeric missing values : {e}"
 
-def load_numeric_imputor(path):
+def load_numeric_imputor():
     try:
-        numeric_imputor = joblib.load(path+"/numeric_imputer.joblib")
+        numeric_imputor = joblib.load(paths.DATA_ARTIFACTS_DIR_PATH+"/numeric_imputer.joblib")
         return numeric_imputor
     except Exception as e:
         raise f"Error while loading numeric imputor : {e}"
 
-def load_min_max_scaler(path):
+def load_min_max_scaler():
     try:
-        min_max_scaler = joblib.load(path+"/min_max_scaler.joblib")
+        min_max_scaler = joblib.load(paths.DATA_ARTIFACTS_DIR_PATH+"/min_max_scaler.joblib")
         return min_max_scaler
     except Exception as e:
         raise f"Error while loading min max scaler : {e}"
 
-def save_numeric_imputor(numeric_imputor , path):
+def save_numeric_imputor(numeric_imputor):
     try:
-        joblib.dump(numeric_imputor, path+"/numeric_imputer.joblib")
+        joblib.dump(numeric_imputor, paths.DATA_ARTIFACTS_DIR_PATH+"/numeric_imputer.joblib")
     except Exception as e:
         raise f"Error while saving numeric imputor : {e}"
 
-def sav_min_max_scaler(min_max_scaler , path):
+def sav_min_max_scaler(min_max_scaler ):
     try:
-        joblib.dump(min_max_scaler, path+"/min_max_scaler.joblib")
+        joblib.dump(min_max_scaler, paths.DATA_ARTIFACTS_DIR_PATH+"/min_max_scaler.joblib")
     except Exception as e:
         raise f"Error while saving min max scaler : {e}"
 
+def save_numeric_columns_to_be_considered(numeric_columns_to_be_considered):
+    try:
+        context = {"columns":numeric_columns_to_be_considered}
+        joblib.dump(context,paths.DATA_ARTIFACTS_DIR_PATH+'/numeric_context.joblib')
+    except Exception as e:
+        raise f"Error while saving categorical columns context : {e}"
+
+def load_numeric_columns_to_be_considered():
+    try:
+        context = joblib.load(paths.DATA_ARTIFACTS_DIR_PATH+'/numeric_context.joblib')
+        return context['columns']
+    except Exception as e:
+        return []
 
 
 def cast_to_object_numeric_columns(numeric_data):
@@ -160,7 +184,17 @@ def initiate_processing_pipeline(pipeline , data):
         return pipeline , pipeline.transform(data)
     except Exception as e:
         raise f"Error occured while intiating pipeline : {e}"
-    
+
+def save_pipeline(pipeline , tag):
+    try:
+        if(tag!="train" and tag!="test"):
+            raise f"Error occured while saving pipeline : Invalid Tag"
+        elif(tag=="train"):
+            joblib.dump(pipeline,paths.DATA_ARTIFACTS_DIR_PATH+"/train_pipeline.joblib")
+        else:
+            joblib.dump(pipeline,paths.DATA_ARTIFACTS_DIR_PATH+"/test_pipeline.joblib")   
+    except Exception as e:
+        raise f"Error occured while saving pipeline : {e}"
 
 
 

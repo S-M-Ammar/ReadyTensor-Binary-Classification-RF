@@ -49,22 +49,36 @@ def run_training(
             validated_data, val_pct=model_config["validation_split"]
         )
 
-        pipeline_categorical = Pipeline([
-                                ('CategoricalTransformer', CategoricalTransformer(data_schema.categorical_features,True))
-                            ])
+        # train_pipeline_categorical = Pipeline([
+        #                         ('CategoricalTransformer', CategoricalTransformer(data_schema.categorical_features,True))
+        #                     ])
         
-        pipeline_numeric = Pipeline([
-                                ('NumericTransformer', NumericTransformer(data_schema.numeric_features,True))
-                            ])
-        pipeline_categorical , transformed_data_categorical = initiate_processing_pipeline(pipeline_categorical , train_data)
-        pipeline_numeric , transformed_data_numeric = initiate_processing_pipeline(pipeline_numeric , train_data)
-        train_columns = list(transformed_data_categorical.columns) + list(transformed_data_numeric.columns)
-        train_data = pd.concat([transformed_data_categorical,transformed_data_numeric],axis=1,ignore_index=True)
-        train_data.columns = train_columns
-        print(train_data)
+        # train_pipeline_numeric = Pipeline([
+        #                         ('NumericTransformer', NumericTransformer(data_schema.numeric_features,True))
+        #                     ])
+        
+        # train_pipeline_categorical , train_transformed_data_categorical = initiate_processing_pipeline(train_pipeline_categorical , train_data)
+        # train_pipeline_numeric , train_transformed_data_numeric = initiate_processing_pipeline(train_pipeline_numeric , train_data)
+        # train_columns = list(train_transformed_data_categorical.columns) + list(train_transformed_data_numeric.columns)
+        # train_data = pd.concat([train_transformed_data_categorical,train_transformed_data_numeric],axis=1,ignore_index=True)
+        # train_data.columns = train_columns
+
+        # X_train = train_data
+        # Y_train = train_split[[data_schema.target]]
 
         
-
+        test_val_pipeline_categorical = Pipeline([
+                                                   ('CategoricalTransformer', CategoricalTransformer(data_schema.categorical_features,False))
+                                                ])
+        
+        test_val_pipeline_numerical = Pipeline([
+                                                   ('NumericTransformer', NumericTransformer(data_schema.numeric_features,False))
+                                               ])
+        
+        test_val_pipeline , test_val_transformed_data_categorical = initiate_processing_pipeline(test_val_pipeline_categorical , val_split)
+        print(test_val_transformed_data_categorical)
+        # test_val_pipeline_numeric , test_val_transformed_data_numeric = initiate_processing_pipeline(test_val_pipeline_numerical , val_split)
+        
 
     except Exception as e:
         logger.error("Error : ",e)
