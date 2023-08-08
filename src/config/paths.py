@@ -37,7 +37,6 @@ PREDICTOR_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "predictor")
 # Name of the explainer file inside artifacts directory
 EXPLAINER_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "explainer")
 
-
 # Paths inside the source directory
 # Path to source directory
 SRC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -45,17 +44,23 @@ SRC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG_DIR = os.path.join(SRC_DIR, "config")
 # Path to model config
 MODEL_CONFIG_FILE_PATH = os.path.join(CONFIG_DIR, "model_config.json")
+# Path to hyperparameters file with default values
+DEFAULT_HYPERPARAMETERS_FILE_PATH = os.path.join(CONFIG_DIR, "default_hyperparameters.json")
+# Path to explainer (explainable AI or XAI) config file
+EXPLAINER_CONFIG_FILE_PATH = os.path.join(CONFIG_DIR, "explainer.json")
 
-# print("ROOT : ",ROOT_DIR)
+# Path to outputs
+OUTPUT_DIR = os.path.join(MODEL_INPUTS_OUTPUTS, "outputs")
+# Path to predictions directory inside outputs directory
+PREDICTIONS_DIR = os.path.join(OUTPUT_DIR, "predictions")
+# Name of the file containing the predictions
+PREDICTIONS_FILE_PATH = os.path.join(PREDICTIONS_DIR, "predictions.csv")
+# Path to HPT results directory inside outputs directory
+HPT_OUTPUTS_DIR = os.path.join(OUTPUT_DIR, "hpt_outputs")
 
-# print("MODEL_INPUTS_OUTPUTS : ",MODEL_INPUTS_OUTPUTS)
-
-# print("INPUT_DIR  : ",INPUT_DIR)
-
-# print("INPUT_SCHEMA_DIR : ",INPUT_SCHEMA_DIR)
-
-# print("DATA_DIR : ",DATA_DIR)
-
-# print("TRAIN_DIR : ",TRAIN_DIR)
-
-# print("TEST_DIR : ",TEST_DIR)
+# Path to logs directory inside outputs directory
+ERRORS_DIR = os.path.join(OUTPUT_DIR, "errors")
+# Error file paths
+TRAIN_ERROR_FILE_PATH = os.path.join(ERRORS_DIR, "train_error.txt")
+PREDICT_ERROR_FILE_PATH = os.path.join(ERRORS_DIR, "predict_error.txt")
+SERVE_ERROR_FILE_PATH = os.path.join(ERRORS_DIR, "serve_error.txt")

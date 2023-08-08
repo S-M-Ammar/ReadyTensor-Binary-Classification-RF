@@ -6,6 +6,10 @@ from schema.data_schema import load_json_data_schema, save_schema
 from utils import read_csv_in_directory, read_json_as_dict, set_seeds, split_train_val
 from preprocessing_data.preprocessing_utils import initiate_processing_pipeline , compile_pipeline ,save_pipeline
 from preprocessing_data.pipeline import CategoricalTransformer , NumericTransformer
+from prediction.predictor_model import evaluate_predictor_model,save_predictor_model,train_predictor_model
+from xai.explainer import fit_and_save_explainer
+
+
 from sklearn.pipeline import Pipeline
 import pandas as pd
 
@@ -16,7 +20,11 @@ def run_training(
     input_schema_dir: str = paths.INPUT_SCHEMA_DIR,
     saved_schema_dir_path: str = paths.SAVED_SCHEMA_DIR_PATH,
     model_config_file_path:str = paths.MODEL_CONFIG_FILE_PATH,
+    predictor_dir_path: str = paths.PREDICTOR_DIR_PATH,
+    default_hyperparameters_file_path: str = paths.DEFAULT_HYPERPARAMETERS_FILE_PATH,
     train_dir:str = paths.TRAIN_DIR,
+    explainer_config_file_path: str = paths.EXPLAINER_CONFIG_FILE_PATH,
+    explainer_dir_path: str = paths.EXPLAINER_DIR_PATH,
     run_tuning: bool = False,
     ):
     
@@ -73,10 +81,35 @@ def run_training(
         save_pipeline(test_val_pipeline_numeric , "test_val_numeric")
         
 
-        # X_train = train_data
-        # Y_train = train_split[[data_schema.target]]
+        X_train = processed_train_data
+        Y_train = train_split[[data_schema.target]]
+        X_val = processed_test_val_data
+        Y_val = val_split[[data_schema.target]]
 
+        logger.info("Training classifier...")
+        default_hyperparameters = read_json_as_dict(
+            default_hyperparameters_file_path
+        )
+        predictor = train_predictor_model(
+            X_train, Y_train, default_hyperparameters
+        )
+
+        logger.info("Saving classifier...")
+        save_predictor_model(predictor, predictor_dir_path)
+
+        # calculate and print validation accuracy
+        logger.info("Calculating accuracy on validation data...")
+        val_accuracy = evaluate_predictor_model(
+            predictor, X_val, Y_val
+        )
+        logger.info(f"Validation data accuracy: {val_accuracy}")
+
+        logger.info("Fitting and saving explainer...")
+        _ = fit_and_save_explainer(
+            X_train, explainer_config_file_path, explainer_dir_path
+        )
         
+        logger.info("Training completed successfully")
    
         
         # test_val_pipeline , test_val_transformed_data_categorical = initiate_processing_pipeline(test_val_pipeline_categorical , val_split)
@@ -84,7 +117,14 @@ def run_training(
         # test_val_pipeline_numeric , test_val_transformed_data_numeric = initiate_processing_pipeline(test_val_pipeline_numerical , val_split)
         
 
-    except Exception as e:
-        logger.error("Error : ",e)
+    except Exception as exc:
+       
+        err_msg = "Error occurred during training."
+        # Log the error
+        logger.error(f"{err_msg} Error: {str(exc)}")
+        # Log the error to the separate logging file
+        log_error(message=err_msg, error=exc, error_fpath=paths.TRAIN_ERROR_FILE_PATH)
+        # re-raise the error
+        raise Exception(f"{err_msg} Error: {str(exc)}") from exc
 
 run_training()
