@@ -60,7 +60,7 @@
         "name": "Embarked",
         "description": "Port of Embarkation",
         "dataType": "CATEGORICAL",
-        "categories": ["male", "female"],
+        "categories": ["S","C","Q"],
         "nullable": true
       }
       

@@ -1,0 +1,7 @@
+Error occurred during inference. Request id: 22c19937cd Error: create_predictions_dataframe() got multiple values for argument 'return_probs'
+Traceback (most recent call last):
+  File "/Users/ammar/Ready Tensor/src/serve.py", line 76, in infer
+    await transform_req_data_and_make_predictions(data)
+  File "/Users/ammar/Ready Tensor/src/serve_utils.py", line 43, in transform_req_data_and_make_predictions
+    predictions_df = create_predictions_dataframe(
+TypeError: create_predictions_dataframe() got multiple values for argument 'return_probs'

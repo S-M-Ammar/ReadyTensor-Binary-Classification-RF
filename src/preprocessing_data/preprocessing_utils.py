@@ -192,9 +192,9 @@ def save_pipeline(pipeline , tag):
         raise f"Error occured while saving pipeline : {e}"
 
 
-def load_pipeline(pipeline , tag):
+def load_pipeline(tag):
     try:
-        return joblib.load(pipeline,paths.DATA_ARTIFACTS_DIR_PATH+"/"+tag+"_pipeline.joblib")
+        return joblib.load(paths.DATA_ARTIFACTS_DIR_PATH+"/"+tag+"_pipeline.joblib")
     except Exception as e:
         raise f"Error occured while saving pipeline : {e}"
 
