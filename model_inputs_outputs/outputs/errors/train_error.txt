@@ -1,5 +1,7 @@
-Error occurred during training. Error: __init__() got an unexpected keyword argument 'is_training'
+Error occurred during training. Error: name 'MODEL_ARTIFACTS_PATH' is not defined
 Traceback (most recent call last):
-  File "/Users/ammar/Ready Tensor/src/train.py", line 63, in run_training
-    ('Merger' , Merger(is_training=True))
-TypeError: __init__() got an unexpected keyword argument 'is_training'
+  File "train.py", line 98, in run_training
+    default_hyperparameters = run_hyperparameter_tuning(X_train,Y_train)
+  File "/Users/ammar/Ready Tensor/src/hyperparameter_tuning/tuner.py", line 61, in run_hyperparameter_tuning
+    joblib.dump(best_hyperparameters,MODEL_ARTIFACTS_PATH+"/optimized_hyper_parameters.joblib")
+NameError: name 'MODEL_ARTIFACTS_PATH' is not defined

@@ -21,7 +21,7 @@ class Classifier:
     classifier models.
     """
 
-    model_name = "Decision Tree Binary Classifier"
+    model_name = "Random Forest Binary Classifier"
 
     def __init__(
         self,

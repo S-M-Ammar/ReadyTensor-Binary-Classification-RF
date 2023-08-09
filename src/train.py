@@ -8,6 +8,7 @@ from preprocessing_data.preprocessing_utils import save_pipeline
 from preprocessing_data.pipeline import CategoricalTransformer , NumericTransformer , Merger , TargetEncoder
 from prediction.predictor_model import evaluate_predictor_model,save_predictor_model,train_predictor_model
 from xai.explainer import fit_and_save_explainer
+from hyperparameter_tuning.tuner import run_hyperparameter_tuning
 
 
 from sklearn.pipeline import Pipeline
@@ -25,7 +26,7 @@ def run_training(
     train_dir:str = paths.TRAIN_DIR,
     explainer_config_file_path: str = paths.EXPLAINER_CONFIG_FILE_PATH,
     explainer_dir_path: str = paths.EXPLAINER_DIR_PATH,
-    run_tuning: bool = False,
+    run_tuning: bool = True,
     ):
     
     try:
@@ -71,54 +72,55 @@ def run_training(
         
         target_encoder_pipeline = Pipeline([('TargetEncoder',TargetEncoder(data_schema.target,data_schema.target_classes))])
         
-
+        train_pipeline.fit(train_split)
         train_processed_data = train_pipeline.transform(train_split)
         train_processed_data = train_processed_data["processed_data"]
         save_pipeline(train_pipeline,"train_processing_pipeline")
 
+        test_val_pipeline.fit(val_split)
         val_processed_data = test_val_pipeline.transform(val_split)
         val_processed_data = val_processed_data["processed_data"]
         save_pipeline(test_val_pipeline,"test_val_processing_pipeline")
         
+        target_encoder_pipeline.fit(train_split)
         train_targets = target_encoder_pipeline.transform(train_split)
         val_targets = target_encoder_pipeline.transform(val_split)
         save_pipeline(target_encoder_pipeline,"target_encoder_pipeline")
    
-        # X_train = processed_train_data
-        # Y_train = train_split[[data_schema.target]]
-        # X_val = processed_test_val_data
-        # Y_val = val_split[[data_schema.target]]
+        X_train = train_processed_data
+        Y_train = train_targets
+        X_val = val_processed_data
+        Y_val = val_targets
 
-        # logger.info("Training classifier...")
-        # default_hyperparameters = read_json_as_dict(
-        #     default_hyperparameters_file_path
-        # )
-        # predictor = train_predictor_model(
-        #     X_train, Y_train, default_hyperparameters
-        # )
+        logger.info("Training classifier...")
+        default_hyperparameters = None
+        if(run_tuning):
+            default_hyperparameters = run_hyperparameter_tuning(X_train,Y_train)
+        else:
+            default_hyperparameters = read_json_as_dict(
+                default_hyperparameters_file_path
+            )
+        predictor = train_predictor_model(
+            X_train, Y_train, default_hyperparameters
+        )
 
-        # logger.info("Saving classifier...")
-        # save_predictor_model(predictor, predictor_dir_path)
+        logger.info("Saving classifier...")
+        save_predictor_model(predictor, predictor_dir_path)
 
-        # # calculate and print validation accuracy
-        # logger.info("Calculating accuracy on validation data...")
-        # val_accuracy = evaluate_predictor_model(
-        #     predictor, X_val, Y_val
-        # )
-        # logger.info(f"Validation data accuracy: {val_accuracy}")
+        # calculate and print validation accuracy
+        logger.info("Calculating accuracy on validation data...")
+        val_accuracy = evaluate_predictor_model(
+            predictor, X_val, Y_val
+        )
+        logger.info(f"Validation data accuracy: {val_accuracy}")
 
-        # logger.info("Fitting and saving explainer...")
-        # _ = fit_and_save_explainer(
-        #     X_train, explainer_config_file_path, explainer_dir_path
-        # )
+        logger.info("Fitting and saving explainer...")
+        _ = fit_and_save_explainer(
+            X_train, explainer_config_file_path, explainer_dir_path
+        )
         
-        # logger.info("Training completed successfully")
+        logger.info("Training completed successfully")
    
-        
-        # test_val_pipeline , test_val_transformed_data_categorical = initiate_processing_pipeline(test_val_pipeline_categorical , val_split)
-        # print(test_val_transformed_data_categorical)
-        # test_val_pipeline_numeric , test_val_transformed_data_numeric = initiate_processing_pipeline(test_val_pipeline_numerical , val_split)
-        
 
     except Exception as exc:
        

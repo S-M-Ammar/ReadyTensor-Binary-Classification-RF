@@ -1,4 +1,3 @@
-from feature_engine.imputation import CategoricalImputer
 import joblib
 import pandas as pd
 import numpy as np
@@ -199,13 +198,13 @@ def load_pipeline(pipeline , tag):
     except Exception as e:
         raise f"Error occured while saving pipeline : {e}"
 
-def compile_pipeline(pipeline_categorical , pipeline_numeric , data):
-    pipeline_categorical , transformed_data_categorical = initiate_processing_pipeline(pipeline_categorical , data)
-    pipeline_numeric , transformed_data_numeric = initiate_processing_pipeline(pipeline_numeric , data)
-    transformed_data_categorical.reset_index(drop=True,inplace=True)
-    transformed_data_numeric.reset_index(drop=True,inplace=True)
-    columns = list(transformed_data_categorical.columns) + list(transformed_data_numeric.columns)
-    processed_data = pd.concat([transformed_data_categorical,transformed_data_numeric],axis=1,ignore_index=True)
-    processed_data.columns = columns
-    return pipeline_categorical , pipeline_numeric , processed_data
+# def compile_pipeline(pipeline_categorical , pipeline_numeric , data):
+#     pipeline_categorical , transformed_data_categorical = initiate_processing_pipeline(pipeline_categorical , data)
+#     pipeline_numeric , transformed_data_numeric = initiate_processing_pipeline(pipeline_numeric , data)
+#     transformed_data_categorical.reset_index(drop=True,inplace=True)
+#     transformed_data_numeric.reset_index(drop=True,inplace=True)
+#     columns = list(transformed_data_categorical.columns) + list(transformed_data_numeric.columns)
+#     processed_data = pd.concat([transformed_data_categorical,transformed_data_numeric],axis=1,ignore_index=True)
+#     processed_data.columns = columns
+#     return pipeline_categorical , pipeline_numeric , processed_data
     

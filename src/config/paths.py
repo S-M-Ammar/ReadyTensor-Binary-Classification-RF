@@ -34,6 +34,8 @@ DATA_ARTIFACTS_DIR_PATH = os.path.join(MODEL_PATH, "artifacts/data_preprocessing
 PREPROCESSING_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "preprocessing")
 # Name of the predictor model file inside artifacts directory
 PREDICTOR_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "predictor")
+# Path to optimized / tune hyper-parameters for model
+OPT_HPT_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "optimized_hyper_parameters")
 # Name of the explainer file inside artifacts directory
 EXPLAINER_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "explainer")
 
