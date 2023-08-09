@@ -4,8 +4,8 @@ from logger import get_logger, log_error
 from data_models.data_validator import validate_data
 from schema.data_schema import load_json_data_schema, save_schema
 from utils import read_csv_in_directory, read_json_as_dict, set_seeds, split_train_val
-from preprocessing_data.preprocessing_utils import initiate_processing_pipeline , compile_pipeline ,save_pipeline
-from preprocessing_data.pipeline import CategoricalTransformer , NumericTransformer
+from preprocessing_data.preprocessing_utils import save_pipeline
+from preprocessing_data.pipeline import CategoricalTransformer , NumericTransformer , Merger , TargetEncoder
 from prediction.predictor_model import evaluate_predictor_model,save_predictor_model,train_predictor_model
 from xai.explainer import fit_and_save_explainer
 
@@ -57,59 +57,62 @@ def run_training(
             validated_data, val_pct=model_config["validation_split"]
         )
 
-        train_pipeline_categorical = Pipeline([
-                                              ('CategoricalTransformer', CategoricalTransformer(data_schema.categorical_features,True))
-                                             ])
+        train_pipeline = Pipeline([
+                                     ('CategoricalTransformer', CategoricalTransformer(data_schema.categorical_features,is_training=True)),
+                                     ('NumericTransformer', NumericTransformer(data_schema.numeric_features,is_training=True)),
+                                     ('Merger' , Merger())
+                                  ])
         
-        train_pipeline_numeric = Pipeline([
-                                            ('NumericTransformer', NumericTransformer(data_schema.numeric_features,True))
-                                          ])
+        test_val_pipeline = Pipeline([
+                                     ('CategoricalTransformer', CategoricalTransformer(data_schema.categorical_features,is_training=False)),
+                                     ('NumericTransformer', NumericTransformer(data_schema.numeric_features,is_training=False)),
+                                     ('Merger' , Merger())
+                                  ])
         
-        test_val_pipeline_categorical = Pipeline([
-                                                   ('CategoricalTransformer', CategoricalTransformer(data_schema.categorical_features,False))
-                                                ])
-        
-        test_val_pipeline_numeric = Pipeline([
-                                                   ('NumericTransformer', NumericTransformer(data_schema.numeric_features,False))
-                                               ])
-        train_pipeline_categorical , train_pipeline_numeric , processed_train_data = compile_pipeline(train_pipeline_categorical , train_pipeline_numeric , train_split)
-        test_val_pipeline_categorical , test_val_pipeline_numeric , processed_test_val_data = compile_pipeline(test_val_pipeline_categorical , test_val_pipeline_numeric , val_split)
-
-        save_pipeline(train_pipeline_categorical , "train_categorical")
-        save_pipeline(train_pipeline_numeric , "train_numeric")
-        save_pipeline(test_val_pipeline_categorical,"test_val_categorical")
-        save_pipeline(test_val_pipeline_numeric , "test_val_numeric")
+        target_encoder_pipeline = Pipeline([('TargetEncoder',TargetEncoder(data_schema.target,data_schema.target_classes))])
         
 
-        X_train = processed_train_data
-        Y_train = train_split[[data_schema.target]]
-        X_val = processed_test_val_data
-        Y_val = val_split[[data_schema.target]]
+        train_processed_data = train_pipeline.transform(train_split)
+        train_processed_data = train_processed_data["processed_data"]
+        save_pipeline(train_pipeline,"train_processing_pipeline")
 
-        logger.info("Training classifier...")
-        default_hyperparameters = read_json_as_dict(
-            default_hyperparameters_file_path
-        )
-        predictor = train_predictor_model(
-            X_train, Y_train, default_hyperparameters
-        )
-
-        logger.info("Saving classifier...")
-        save_predictor_model(predictor, predictor_dir_path)
-
-        # calculate and print validation accuracy
-        logger.info("Calculating accuracy on validation data...")
-        val_accuracy = evaluate_predictor_model(
-            predictor, X_val, Y_val
-        )
-        logger.info(f"Validation data accuracy: {val_accuracy}")
-
-        logger.info("Fitting and saving explainer...")
-        _ = fit_and_save_explainer(
-            X_train, explainer_config_file_path, explainer_dir_path
-        )
+        val_processed_data = test_val_pipeline.transform(val_split)
+        val_processed_data = val_processed_data["processed_data"]
+        save_pipeline(test_val_pipeline,"test_val_processing_pipeline")
         
-        logger.info("Training completed successfully")
+        train_targets = target_encoder_pipeline.transform(train_split)
+        val_targets = target_encoder_pipeline.transform(val_split)
+        save_pipeline(target_encoder_pipeline,"target_encoder_pipeline")
+   
+        # X_train = processed_train_data
+        # Y_train = train_split[[data_schema.target]]
+        # X_val = processed_test_val_data
+        # Y_val = val_split[[data_schema.target]]
+
+        # logger.info("Training classifier...")
+        # default_hyperparameters = read_json_as_dict(
+        #     default_hyperparameters_file_path
+        # )
+        # predictor = train_predictor_model(
+        #     X_train, Y_train, default_hyperparameters
+        # )
+
+        # logger.info("Saving classifier...")
+        # save_predictor_model(predictor, predictor_dir_path)
+
+        # # calculate and print validation accuracy
+        # logger.info("Calculating accuracy on validation data...")
+        # val_accuracy = evaluate_predictor_model(
+        #     predictor, X_val, Y_val
+        # )
+        # logger.info(f"Validation data accuracy: {val_accuracy}")
+
+        # logger.info("Fitting and saving explainer...")
+        # _ = fit_and_save_explainer(
+        #     X_train, explainer_config_file_path, explainer_dir_path
+        # )
+        
+        # logger.info("Training completed successfully")
    
         
         # test_val_pipeline , test_val_transformed_data_categorical = initiate_processing_pipeline(test_val_pipeline_categorical , val_split)

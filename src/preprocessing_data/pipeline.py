@@ -22,12 +22,13 @@ class CategoricalTransformer(BaseEstimator, TransformerMixin):
         self.categorical_columns_to_considered = []
         
     def fit(self, X, y=None):
-        pass
+        return self
 
     def transform(self, data):
 
+        
         if(len(self.categorical_columns)==0):
-            return data
+            return {"data":data , "categorical_data":pd.DataFrame()}
         
         if(self.is_training):
             self.total_records = len(data)
@@ -47,9 +48,11 @@ class CategoricalTransformer(BaseEstimator, TransformerMixin):
                 one_hot_encoder , transformed_categorical_data = perform_one_hot_encoder(one_hot_encoder , transformed_categorical_data)
                 save_one_hot_encoder(one_hot_encoder)
                 save_categorical_columns_to_be_considered(self.categorical_columns_to_considered)
-                return transformed_categorical_data
-                
-            return categorical_data
+
+                return {"data":data , "categorical_data":transformed_categorical_data}
+            
+            return {"data":data , "categorical_data":categorical_data}
+        
         
         else:
             # check if there are any categorical columns to be considered.
@@ -63,9 +66,10 @@ class CategoricalTransformer(BaseEstimator, TransformerMixin):
                 categorical_data = cast_to_object_categorical_columns(categorical_data)
                 one_hot_encoder = load_one_hot_encoder()
                 categorical_data = one_hot_encoder.transform(categorical_data)
-                return categorical_data
+
+                return {"data":data , "categorical_data":categorical_data}
             
-            return data
+            return {"data":data , "categorical_data":pd.DataFrame()}
 
 
 
@@ -77,14 +81,16 @@ class NumericTransformer(BaseEstimator, TransformerMixin):
         self.is_training = is_training
         self.missing_value_threshold_percent = missing_value_threshold_percent
         self.numeric_columns_to_considered = []
+        self.data = None
 
     def fit(self, X, y=None):
-        pass
+        return self
 
-    def transform(self, data):
-
+    def transform(self, data_json):  # received original data and transformed categorical data
+        data = data_json['data']
         if(len(self.numeric_columns)==0):
-            return data
+            data_json['numeric_data'] = pd.DataFrame()
+            return data_json
         
         if(self.is_training):
             self.total_records = len(data)
@@ -102,10 +108,12 @@ class NumericTransformer(BaseEstimator, TransformerMixin):
                 min_max_scaler , transformed_numeric_data = perfrom_min_max_scaling(min_max_scaler , transformed_numeric_data)
                 sav_min_max_scaler(min_max_scaler)
                 save_numeric_columns_to_be_considered(self.numeric_columns_to_considered)
-                
-                return transformed_numeric_data
+                data_json['numeric_data'] = transformed_numeric_data
+                return data_json
 
-            return numeric_data
+            data_json['numeric_data'] = pd.DataFrame()
+            return data_json
+    
         else:
             # check if there are any numerical columns to be considered.
             self.numeric_columns_to_considered = load_numeric_columns_to_be_considered()
@@ -117,7 +125,74 @@ class NumericTransformer(BaseEstimator, TransformerMixin):
                 numeric_data = numeric_imputator.transform(numeric_data)
                 min_max_scaler = load_min_max_scaler()
                 numeric_data = pd.DataFrame(min_max_scaler.transform(numeric_data), columns=numeric_data.columns)
-                return numeric_data
-                
-            return data 
+                data_json['numeric_data'] = numeric_data
+                return data_json
             
+            data_json['numeric_data'] = pd.DataFrame()
+            return data_json
+            
+
+class Merger(BaseEstimator, TransformerMixin):
+    def __init__(self):
+        self.data = None
+
+    def fit(self, X, y=None):
+        return self
+        
+
+    def transform(self, data_json):  # received original data , transformed numeric data and transformed categorical data
+        
+        numeric_data = data_json["numeric_data"]
+        categorical_data = data_json['categorical_data']
+
+        if(len(numeric_data)==0 and len(categorical_data)==0):
+            raise f"No data found for training. Try dataset with less missing values and more columns"
+        
+        elif(len(numeric_data)>=1 and len(categorical_data)>=1):
+            categorical_data.reset_index(drop=True,inplace=True)
+            numeric_data.reset_index(drop=True,inplace=True)
+            columns = list(categorical_data.columns) + list(numeric_data.columns)
+            processed_data = pd.concat([categorical_data,numeric_data],axis=1,ignore_index=True)
+            processed_data.columns = columns
+            data_json["processed_data"] = processed_data
+            return data_json
+        
+        elif(len(numeric_data)==0):
+            categorical_data.reset_index(drop=True,inplace=True)
+            data_json["processed_data"] = categorical_data
+            return data_json
+        else:
+            numeric_data.reset_index(drop=True,inplace=True)
+            data_json["processed_data"] = categorical_data
+
+
+class TargetEncoder(BaseEstimator, TransformerMixin):
+    def __init__(self,target_field,target_classes):
+        self.target_field = target_field
+        self.classes_ = [str(c) for c in target_classes]
+        self.class_encoding = {self.classes_[0]: 0, self.classes_[1]: 1}
+
+    def fit(self, X, y=None):
+        return self
+    
+
+    def transform(self, data):  
+        if self.target_field in data.columns:
+            targets = data[self.target_field].astype(str)
+            observed_classes = set(targets)
+            if len(observed_classes) != 2:
+                raise ValueError(
+                    f"Expected two classes {self.classes_}. Found \
+                        {len(observed_classes)} class in given target classes: \
+                             {list(observed_classes)}"
+                )
+            if len(observed_classes.intersection(self.classes_)) != 2:
+                raise ValueError(
+                    f"Observed classes in target {list(observed_classes)}"
+                    f"do not match given allowed values for target: {self.classes_}"
+                )
+            transformed_targets = targets.apply(str).map(self.class_encoding)
+        else:
+            transformed_targets = None
+
+        return transformed_targets

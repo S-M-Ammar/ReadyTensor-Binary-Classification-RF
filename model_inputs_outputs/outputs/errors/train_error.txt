@@ -1,0 +1,5 @@
+Error occurred during training. Error: __init__() got an unexpected keyword argument 'is_training'
+Traceback (most recent call last):
+  File "/Users/ammar/Ready Tensor/src/train.py", line 63, in run_training
+    ('Merger' , Merger(is_training=True))
+TypeError: __init__() got an unexpected keyword argument 'is_training'
