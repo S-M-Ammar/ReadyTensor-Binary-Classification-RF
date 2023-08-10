@@ -5,7 +5,7 @@ from data_models.data_validator import validate_data
 from schema.data_schema import load_json_data_schema, save_schema
 from utils import read_csv_in_directory, read_json_as_dict, set_seeds, split_train_val
 from preprocessing_data.preprocessing_utils import save_pipeline
-from preprocessing_data.pipeline import CategoricalTransformer , NumericTransformer , Merger , TargetEncoder , DataBalancer
+from preprocessing_data.pipeline import CategoricalTransformer , NumericTransformer , Merger , TargetEncoder , DataBalancer , FeatureSelection
 from prediction.predictor_model import evaluate_predictor_model,save_predictor_model,train_predictor_model
 from xai.explainer import fit_and_save_explainer
 from hyperparameter_tuning.tuner import run_hyperparameter_tuning
@@ -87,10 +87,14 @@ def run_training(
         val_targets = target_encoder_pipeline.transform(val_split)
         save_pipeline(target_encoder_pipeline,"target_encoder_pipeline")        
 
-        X_train = train_processed_data
-        Y_train = train_targets
-        X_val = val_processed_data
-        Y_val = val_targets
+        feature_selection_pipeline = Pipeline([('FeatureSelection',FeatureSelection())])
+        feature_selection_pipeline.fit({"X_train":train_processed_data,"Y_train":train_targets})
+        # significant_features = feature_selection_pipeline.transform({"X_train":train_processed_data,"Y_train":train_targets})
+
+        # X_train = train_processed_data[significant_features]
+        # Y_train = train_targets
+        # X_val = val_processed_data[significant_features]
+        # Y_val = val_targets
 
         data_balancer_pipeline = Pipeline([('DataBalancer',DataBalancer())])
         data_balancer_pipeline.fit({"X_train":X_train,"Y_train":Y_train})

@@ -1,5 +1,11 @@
-Error occurred during training. Error: __init__() takes 1 positional argument but 2 were given
+Error occurred during training. Error: "None of [Index([('Embarked_Q', 'Embarked_S', 'Parch_0', 'Parch_1', 'Parch_2', 'Parch_3', 'Age', 'Fare')], dtype='object')] are in the [columns]"
 Traceback (most recent call last):
-  File "/Users/ammar/Ready Tensor/src/train.py", line 95, in run_training
-    data_balancer_pipeline = Pipeline([('DataBalancer',DataBalancer(data_schema.target))])
-TypeError: __init__() takes 1 positional argument but 2 were given
+  File "train.py", line 94, in run_training
+    X_train = train_processed_data[[significant_features]]
+  File "/Users/ammar/Library/Python/3.8/lib/python/site-packages/pandas/core/frame.py", line 3813, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "/Users/ammar/Library/Python/3.8/lib/python/site-packages/pandas/core/indexes/base.py", line 6070, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "/Users/ammar/Library/Python/3.8/lib/python/site-packages/pandas/core/indexes/base.py", line 6130, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index([('Embarked_Q', 'Embarked_S', 'Parch_0', 'Parch_1', 'Parch_2', 'Parch_3', 'Age', 'Fare')], dtype='object')] are in the [columns]"
