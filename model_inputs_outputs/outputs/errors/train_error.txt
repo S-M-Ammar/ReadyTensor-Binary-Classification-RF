@@ -1,7 +1,5 @@
-Error occurred during training. Error: name 'MODEL_ARTIFACTS_PATH' is not defined
+Error occurred during training. Error: __init__() takes 1 positional argument but 2 were given
 Traceback (most recent call last):
-  File "train.py", line 98, in run_training
-    default_hyperparameters = run_hyperparameter_tuning(X_train,Y_train)
-  File "/Users/ammar/Ready Tensor/src/hyperparameter_tuning/tuner.py", line 61, in run_hyperparameter_tuning
-    joblib.dump(best_hyperparameters,MODEL_ARTIFACTS_PATH+"/optimized_hyper_parameters.joblib")
-NameError: name 'MODEL_ARTIFACTS_PATH' is not defined
+  File "/Users/ammar/Ready Tensor/src/train.py", line 95, in run_training
+    data_balancer_pipeline = Pipeline([('DataBalancer',DataBalancer(data_schema.target))])
+TypeError: __init__() takes 1 positional argument but 2 were given

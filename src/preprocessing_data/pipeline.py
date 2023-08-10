@@ -5,8 +5,8 @@ from feature_engine.imputation import CategoricalImputer
 from feature_engine.imputation import MeanMedianImputer
 from feature_engine.encoding import OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler
-import joblib
 from sklearn.base import BaseEstimator, TransformerMixin
+from imblearn.over_sampling import SMOTE
 
 from config import paths
 from preprocessing_data.preprocessing_utils import *
@@ -196,3 +196,39 @@ class TargetEncoder(BaseEstimator, TransformerMixin):
             transformed_targets = None
 
         return transformed_targets
+
+
+
+
+
+class DataBalancer(BaseEstimator, TransformerMixin):
+    def __init__(self):
+       pass
+        
+    def fit(self, X, y=None):
+        return self
+    
+
+    def transform(self, data):  
+        X_train = data['X_train']
+        Y_train = data['Y_train']
+        targets = Y_train.unique()
+
+        # compare difference
+        percentage_1 = round((Y_train.tolist().count(targets[0]) / len(Y_train))*100 , 2)
+        percentage_2 = round((Y_train.tolist().count(targets[1]) / len(Y_train))*100 , 2)
+
+        difference = np.abs(percentage_1-percentage_2)
+
+        if(difference > 25):
+            # perform SMOTE
+            print("Balancing dataset .....")
+            oversample = SMOTE()
+            X_train, Y_train = oversample.fit_resample(X_train, Y_train)
+
+            return X_train ,Y_train
+        
+        else:
+            return X_train , Y_train
+
+
