@@ -4,7 +4,7 @@ from logger import get_logger, log_error
 from data_models.data_validator import validate_data
 from schema.data_schema import load_json_data_schema, save_schema
 from utils import read_csv_in_directory, read_json_as_dict, set_seeds, split_train_val
-from preprocessing_data.preprocessing_utils import save_pipeline
+from preprocessing_data.preprocessing_utils import save_pipeline , remove_all_model_artifacts
 from preprocessing_data.pipeline import CategoricalTransformer , NumericTransformer , Merger , TargetEncoder , DataBalancer , FeatureSelection
 from prediction.predictor_model import evaluate_predictor_model,save_predictor_model,train_predictor_model
 from xai.explainer import fit_and_save_explainer
@@ -31,6 +31,9 @@ def run_training(
     
     try:
         logger.info("Starting training...")
+        # Removing previous files
+        logger.info("Removing old files...")
+        remove_all_model_artifacts()
         # load and save schema
         logger.info("Loading and saving schema...")
         data_schema = load_json_data_schema(input_schema_dir)
@@ -94,7 +97,7 @@ def run_training(
         if(len(significant_features)>=5):
             train_processed_data = train_processed_data[significant_features]
             val_processed_data = val_processed_data[significant_features]
-            
+
 
         X_train = train_processed_data
         Y_train = train_targets
@@ -108,6 +111,7 @@ def run_training(
         logger.info("Training classifier...")
         default_hyperparameters = None
         if(run_tuning):
+            logger.info("Tuning hyper paramters...")
             default_hyperparameters = run_hyperparameter_tuning(X_train,Y_train)
         else:
             default_hyperparameters = read_json_as_dict(

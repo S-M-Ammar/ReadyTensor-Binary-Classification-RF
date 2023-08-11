@@ -12,7 +12,7 @@ from prediction.predictor_model import load_predictor_model, predict_with_model
 from schema.data_schema import load_saved_schema
 from utils import read_json_as_dict
 from xai.explainer import load_explainer
-from preprocessing_data.preprocessing_utils import load_pipeline
+from preprocessing_data.preprocessing_utils import load_pipeline , load_correlated_features
 from predict import create_predictions_dataframe
 
 logger = get_logger(task_name="serve")
@@ -30,7 +30,13 @@ async def transform_req_data_and_make_predictions(dataframe,request_id):
     test_val_pipeline = load_pipeline("test_val_processing_pipeline")
     transformed_data = test_val_pipeline.transform(dataframe)
     transformed_data = transformed_data["processed_data"]
+    
+   
 
+    # check for correlated features to be selected at prediction
+    correlated_features = load_correlated_features()
+    if(len(correlated_features)>=1):
+        transformed_data = transformed_data[correlated_features]
     
 
     logger.info("Making predictions...")
@@ -39,9 +45,10 @@ async def transform_req_data_and_make_predictions(dataframe,request_id):
     )
     
     logger.info("Converting predictions array into dataframe...")
+
     saved_schema = load_saved_schema(paths.SAVED_SCHEMA_DIR_PATH)
     model_config = read_json_as_dict(paths.MODEL_CONFIG_FILE_PATH)
-    # transformed_data[saved_schema.id] = dataframe[saved_schema.id]
+
     predictions_df = create_predictions_dataframe(
         predictions_arr,
         saved_schema.target_classes,

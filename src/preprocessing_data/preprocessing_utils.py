@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from config import paths
 import json
+import os
 
 def save_correlated_features(correlated_features):
     try:
@@ -13,7 +14,7 @@ def save_correlated_features(correlated_features):
     
 def load_correlated_features():
     try:
-        context = joblib.dump(paths.DATA_ARTIFACTS_DIR_PATH+'/correlated_features.joblib')
+        context = joblib.load(paths.DATA_ARTIFACTS_DIR_PATH+'/correlated_features.joblib')
         return context['columns']
         
     except Exception as e:
@@ -201,7 +202,7 @@ def initiate_processing_pipeline(pipeline , data):
 
 def save_pipeline(pipeline , tag):
     try:
-        joblib.dump(pipeline , paths.DATA_ARTIFACTS_DIR_PATH+"/"+tag+"_pipeline.joblib")
+        joblib.dump(pipeline , paths.DATA_ARTIFACTS_DIR_PATH+"/"+tag+".joblib")
     except Exception as e:
         print(e)
         raise f"Error occured while saving pipeline : {e}"
@@ -209,17 +210,37 @@ def save_pipeline(pipeline , tag):
 
 def load_pipeline(tag):
     try:
-        return joblib.load(paths.DATA_ARTIFACTS_DIR_PATH+"/"+tag+"_pipeline.joblib")
+        return joblib.load(paths.DATA_ARTIFACTS_DIR_PATH+"/"+tag+".joblib")
     except Exception as e:
         raise f"Error occured while saving pipeline : {e}"
+    
+def remove_all_model_artifacts():
+    try:
+        os.remove(paths.DATA_ARTIFACTS_DIR_PATH+"/categorical_context.joblib")
+        os.remove(paths.DATA_ARTIFACTS_DIR_PATH+"/categorical_imputer.joblib")
+        os.remove(paths.DATA_ARTIFACTS_DIR_PATH+"/min_max_scaler.joblib")
+        os.remove(paths.DATA_ARTIFACTS_DIR_PATH+"/numeric_context.joblib")
+        os.remove(paths.DATA_ARTIFACTS_DIR_PATH+"/numeric_imputer.joblib")
+        os.remove(paths.DATA_ARTIFACTS_DIR_PATH+"/one_hot_encoder.joblib")
+        os.remove(paths.DATA_ARTIFACTS_DIR_PATH+"/target_encoder_pipeline.joblib")
+        os.remove(paths.DATA_ARTIFACTS_DIR_PATH+"/test_val_processing_pipeline.joblib")
+        os.remove(paths.DATA_ARTIFACTS_DIR_PATH+"/train_processing_pipeline.joblib")
+        os.remove(paths.EXPLAINER_DIR_PATH+"/explainer.joblib")
+        os.remove(paths.PREDICTOR_DIR_PATH+"/predictor.joblib")
+        os.remove(paths.SAVED_SCHEMA_DIR_PATH+"/schema.joblib")
+        
+        try:
+            os.remove(paths.OPT_HPT_DIR_PATH+"/optimized_hyper_parameters.joblib")
+        except:
+            pass
 
-# def compile_pipeline(pipeline_categorical , pipeline_numeric , data):
-#     pipeline_categorical , transformed_data_categorical = initiate_processing_pipeline(pipeline_categorical , data)
-#     pipeline_numeric , transformed_data_numeric = initiate_processing_pipeline(pipeline_numeric , data)
-#     transformed_data_categorical.reset_index(drop=True,inplace=True)
-#     transformed_data_numeric.reset_index(drop=True,inplace=True)
-#     columns = list(transformed_data_categorical.columns) + list(transformed_data_numeric.columns)
-#     processed_data = pd.concat([transformed_data_categorical,transformed_data_numeric],axis=1,ignore_index=True)
-#     processed_data.columns = columns
-#     return pipeline_categorical , pipeline_numeric , processed_data
+        try:
+             os.remove(paths.DATA_ARTIFACTS_DIR_PATH+"/correlated_features.joblib")
+        except:
+            pass
+
+    except Exception as e:
+        print("No old files found....")
+        pass
+
     

@@ -10,7 +10,7 @@ from imblearn.over_sampling import SMOTE
 from scipy.stats import pointbiserialr
 from collections import OrderedDict
 import scipy.stats as stats
-
+import os
 from config import paths
 from preprocessing_data.preprocessing_utils import *
 
@@ -34,6 +34,7 @@ class CategoricalTransformer(BaseEstimator, TransformerMixin):
             return {"data":data , "categorical_data":pd.DataFrame()}
         
         if(self.is_training):
+
             self.total_records = len(data)
             categorical_data = data[self.categorical_columns]
             categorical_data = cast_to_object_categorical_columns(categorical_data)
@@ -228,7 +229,7 @@ class FeatureSelection(BaseEstimator, TransformerMixin):
                 if(p <= 0.05):
                     self.significant_columns.append(column) 
 
-        if(len(self.significant_columns) >=5 ):
+        if(len(self.significant_columns) >=5):
             save_correlated_features(self.significant_columns)
 
         return self.significant_columns

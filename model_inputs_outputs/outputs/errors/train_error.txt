@@ -1,11 +1,14 @@
-Error occurred during training. Error: '<=' not supported between instances of 'SignificanceResult' and 'float'
+Error occurred during training. Error: exceptions must derive from BaseException
 Traceback (most recent call last):
-  File "train.py", line 92, in run_training
-    significant_features = feature_selection_pipeline.transform({"X_train":train_processed_data,"Y_train":train_targets})
-  File "/Users/ammar/Library/Python/3.8/lib/python/site-packages/sklearn/pipeline.py", line 689, in transform
-    Xt = transform.transform(Xt)
-  File "/Users/ammar/Library/Python/3.8/lib/python/site-packages/sklearn/utils/_set_output.py", line 140, in wrapped
-    data_to_wrap = f(self, X, *args, **kwargs)
-  File "/Users/ammar/Ready Tensor/src/preprocessing_data/pipeline.py", line 226, in transform
-    if(p <=0.05):
-TypeError: '<=' not supported between instances of 'SignificanceResult' and 'float'
+  File "/Users/ammar/Ready Tensor/src/preprocessing_data/preprocessing_utils.py", line 219, in remove_all_model_artifacts
+    os.remove(paths.DATA_ARTIFACTS_DIR_PATH+"/categorical_context.joblib")
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/ammar/Ready Tensor/model_inputs_outputs/model/artifacts/data_preprocessing/categorical_context.joblib'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 36, in run_training
+    remove_all_model_artifacts()
+  File "/Users/ammar/Ready Tensor/src/preprocessing_data/preprocessing_utils.py", line 243, in remove_all_model_artifacts
+    raise f"Error while cleaning model artifacts"
+TypeError: exceptions must derive from BaseException
