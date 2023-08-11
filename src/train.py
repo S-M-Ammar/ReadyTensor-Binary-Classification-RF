@@ -10,7 +10,6 @@ from prediction.predictor_model import evaluate_predictor_model,save_predictor_m
 from xai.explainer import fit_and_save_explainer
 from hyperparameter_tuning.tuner import run_hyperparameter_tuning
 
-
 from sklearn.pipeline import Pipeline
 import pandas as pd
 
@@ -28,7 +27,7 @@ def run_training(
     explainer_dir_path: str = paths.EXPLAINER_DIR_PATH,
     run_tuning: bool = True,
     ):
-    
+  
     try:
         logger.info("Starting training...")
         # Removing previous files
@@ -54,6 +53,8 @@ def run_training(
         validated_data = validate_data(
             data=train_data, data_schema=data_schema, is_train=True
         )
+
+        # validated_data = validated_data.sample(frac = 1)
 
         # split train data into training and validation sets
         logger.info("Performing train/validation split...")

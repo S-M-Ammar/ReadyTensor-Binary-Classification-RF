@@ -27,6 +27,9 @@ class Classifier:
         self,
         n_estimators: Optional[int] = 40,
         max_depth: Optional[int] = 1,
+        min_samples_split: Optional[int] = 2 , 
+        min_samples_leaf:Optional[int] = 2 , 
+        max_features:Optional[str] = "log2",
         **kwargs,
     ):
         """Construct a new Decision Tree binary classifier.
@@ -41,6 +44,9 @@ class Classifier:
         """
         self.n_estimators = int(n_estimators)
         self.max_depth = int(max_depth)
+        self.min_samples_split = int(min_samples_split)
+        self.min_samples_leaf = int(min_samples_leaf)
+        self.max_features = max_features
         self.model = self.build_model()
         self._is_trained = False
 
@@ -49,6 +55,9 @@ class Classifier:
         model = RandomForestClassifier(
             n_estimators=self.n_estimators,
             max_depth=self.max_depth,
+            min_samples_split = self.min_samples_split,
+            min_samples_leaf = self.min_samples_leaf,
+            max_features = self.max_features
         )
         return model
 
