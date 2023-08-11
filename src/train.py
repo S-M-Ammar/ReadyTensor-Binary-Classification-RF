@@ -9,6 +9,7 @@ from preprocessing_data.pipeline import CategoricalTransformer , NumericTransfor
 from prediction.predictor_model import evaluate_predictor_model,save_predictor_model,train_predictor_model
 from xai.explainer import fit_and_save_explainer
 from hyperparameter_tuning.tuner import run_hyperparameter_tuning
+import os
 
 from sklearn.pipeline import Pipeline
 import pandas as pd
@@ -29,6 +30,10 @@ def run_training(
     ):
   
     try:
+        
+        if not os.path.exists(paths.DATA_ARTIFACTS_DIR_PATH):
+            os.makedirs(paths.DATA_ARTIFACTS_DIR_PATH)
+
         logger.info("Starting training...")
         # Removing previous files
         logger.info("Removing old files...")
