@@ -10,6 +10,7 @@ COPY ./requirements/requirements.txt /opt/
 RUN pip3 install --no-cache-dir -r /opt/requirements.txt
 # copy src code into image and chmod scripts
 COPY src ./opt/src
+COPY model_inputs_outputs ./opt/model_inputs_outputs
 COPY ./entry_point.sh /opt/
 RUN chmod +x /opt/entry_point.sh
 COPY ./fix_line_endings.sh /opt/
