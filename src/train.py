@@ -98,7 +98,6 @@ def run_training(
             train_processed_data = train_processed_data[significant_features]
             val_processed_data = val_processed_data[significant_features]
 
-
         X_train = train_processed_data
         Y_train = train_targets
         X_val = val_processed_data
@@ -149,4 +148,22 @@ def run_training(
         # re-raise the error
         raise Exception(f"{err_msg} Error: {str(exc)}") from exc
 
-run_training()
+
+def parse_arguments() -> argparse.Namespace:
+    """Parse the command line argument that indicates if user wants to run
+    hyperparameter tuning."""
+    parser = argparse.ArgumentParser(description="Train a binary classification model.")
+    parser.add_argument(
+        "-t",
+        "--tune",
+        action="store_true",
+        help=(
+            "Run hyperparameter tuning before training the model. "
+            + "If not set, use default hyperparameters.",
+        ),
+    )
+    return parser.parse_args()
+
+if __name__ == "__main__":
+    args = parse_arguments()
+    run_training(run_tuning=args.tune)

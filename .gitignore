@@ -1,2 +1,24 @@
 *.csv
-.DS_Store
+*.DS_Store
+reference.txt
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Testing
+.tox/
+.coverage
+.cache
+.pytest_cache/
+coverage.xml
+*.cover
