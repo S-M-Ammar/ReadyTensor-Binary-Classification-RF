@@ -31,6 +31,8 @@ async def transform_req_data_and_make_predictions(dataframe,request_id):
     transformed_data = test_val_pipeline.transform(dataframe)
     transformed_data = transformed_data["processed_data"]
 
+    
+
     logger.info("Making predictions...")
     predictions_arr = predict_with_model(
        load_predictor_model(paths.PREDICTOR_DIR_PATH), transformed_data, return_probs=True

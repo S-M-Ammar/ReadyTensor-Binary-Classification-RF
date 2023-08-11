@@ -94,6 +94,7 @@ def run_training(
         if(len(significant_features)>=5):
             train_processed_data = train_processed_data[significant_features]
             val_processed_data = val_processed_data[significant_features]
+            
 
         X_train = train_processed_data
         Y_train = train_targets

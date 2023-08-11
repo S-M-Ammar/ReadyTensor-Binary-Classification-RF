@@ -4,6 +4,21 @@ import numpy as np
 from config import paths
 import json
 
+def save_correlated_features(correlated_features):
+    try:
+        context = {"columns":correlated_features}
+        joblib.dump(context,paths.DATA_ARTIFACTS_DIR_PATH+'/correlated_features.joblib')
+    except Exception as e:
+        raise f"Error while saving correlated features : {e}"
+    
+def load_correlated_features():
+    try:
+        context = joblib.dump(paths.DATA_ARTIFACTS_DIR_PATH+'/correlated_features.joblib')
+        return context['columns']
+        
+    except Exception as e:
+        return []
+
 def get_categorical_columns_with_missing_value_threshold(categorical_data,categorical_columns,total_records,threshold):
     try:
         columns_to_be_considered = []

@@ -204,10 +204,7 @@ class TargetEncoder(BaseEstimator, TransformerMixin):
 
 class FeatureSelection(BaseEstimator, TransformerMixin):
     def __init__(self):
-       self.numeric_correlation_dict = {}
-       self.categorical_correlation_dict = {}
        self.significant_columns = []
-       self.threshold = 90
 
         
     def fit(self, X, y=None):
@@ -222,33 +219,19 @@ class FeatureSelection(BaseEstimator, TransformerMixin):
             if(column in numeric_columns_to_be_considerd):
                 # perform point biserial correlation
                 p = pointbiserialr(Y_train.values, X_train[column].values)
-                # self.numeric_correlation_dict[column] = corr[1]
                 if(p[1] <=0.05):
                     self.significant_columns.append(column) 
             else: 
+                # perform chi sqaure correlation
                 compare = pd.crosstab(Y_train,X_train[column])
                 chi2, p, dof, ex = stats.chi2_contingency(compare)
                 if(p <= 0.05):
                     self.significant_columns.append(column) 
-        
+
+        if(len(self.significant_columns) >=5 ):
+            save_correlated_features(self.significant_columns)
+
         return self.significant_columns
-        # significant_numerical_columns = []
-        # significant_categorical_columns = []
-
-        # if(len(self.numeric_correlation_dict.keys())>=1):
-
-        #     self.numeric_correlation_dict = OrderedDict(sorted(self.numeric_correlation_dict.items())) 
-        #     fifty_percent_of_numeric_columns = int(round((self.threshold/100) * len(self.numeric_correlation_dict.keys()),0))
-        #     significant_numerical_columns = list(self.numeric_correlation_dict.keys())[0:fifty_percent_of_numeric_columns]
-           
-            
-        # if(len(self.categorical_correlation_dict.keys())>=1):
-
-        #     self.categorical_correlation_dict = OrderedDict(sorted(self.categorical_correlation_dict.items())) 
-        #     fifty_percent_of_categorical_columns = int(round((self.threshold/100) * len(self.categorical_correlation_dict.keys()),0))
-        #     significant_categorical_columns = list(self.categorical_correlation_dict.keys())[0:fifty_percent_of_categorical_columns]
-
-        # self.significant_columns = significant_categorical_columns + significant_numerical_columns
        
     
 class DataBalancer(BaseEstimator, TransformerMixin):
