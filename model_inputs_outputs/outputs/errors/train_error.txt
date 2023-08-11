@@ -1,14 +1,5 @@
-Error occurred during training. Error: exceptions must derive from BaseException
+Error occurred during training. Error: 'NoneType' object is not subscriptable
 Traceback (most recent call last):
-  File "/Users/ammar/Ready Tensor/src/preprocessing_data/preprocessing_utils.py", line 219, in remove_all_model_artifacts
-    os.remove(paths.DATA_ARTIFACTS_DIR_PATH+"/categorical_context.joblib")
-FileNotFoundError: [Errno 2] No such file or directory: '/Users/ammar/Ready Tensor/model_inputs_outputs/model/artifacts/data_preprocessing/categorical_context.joblib'
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "train.py", line 36, in run_training
-    remove_all_model_artifacts()
-  File "/Users/ammar/Ready Tensor/src/preprocessing_data/preprocessing_utils.py", line 243, in remove_all_model_artifacts
-    raise f"Error while cleaning model artifacts"
-TypeError: exceptions must derive from BaseException
+  File "train.py", line 86, in run_training
+    train_processed_data = train_processed_data["processed_data"]
+TypeError: 'NoneType' object is not subscriptable

@@ -167,7 +167,9 @@ class Merger(BaseEstimator, TransformerMixin):
             return data_json
         else:
             numeric_data.reset_index(drop=True,inplace=True)
-            data_json["processed_data"] = categorical_data
+            data_json["processed_data"] = numeric_data
+            return data_json
+        
 
 
 class TargetEncoder(BaseEstimator, TransformerMixin):

@@ -115,6 +115,10 @@ def run_training(
 
         logger.info("Training classifier...")
         default_hyperparameters = None
+
+        # Making tuning default behaviour for now
+        run_tuning = True
+        
         if(run_tuning):
             logger.info("Tuning hyper paramters...")
             default_hyperparameters = run_hyperparameter_tuning(X_train,Y_train)

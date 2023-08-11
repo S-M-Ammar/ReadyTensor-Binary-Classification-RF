@@ -1,72 +1,229 @@
 {
-    "title": "Titanic dataset",
-    "summary": "Titanic dataset for binary classification",
+    "title": "Breast cancer dataset",
+    "summary": "Breast cancer dataset",
     "modelCategory": "binary_classification",
     "schemaVersion": 1.0,
     "inputDataFormat": "CSV",
     "id": {
-      "name": "PassengerId",
+      "name": "id",
       "description": "unique identifier"
     },
     "target": {
-      "name": "Survived",
+      "name": "diagnosis",
       "description": "binary class (0 or 1)",
-      "classes": ["0", "1"]
+      "classes": ["M", "B"]
     },
     "features": [
       {
-        "name": "Age",
-        "description": "Passenger Age",
+        "name": "radius_mean",
+        "description": "radius mean",
         "dataType": "NUMERIC",
-        "example": 32,
+        "example":23.0,
         "nullable": true
       },
       {
-        "name": "Pclass",
-        "description": "Ticket Class",
-        "dataType": "CATEGORICAL",
-        "categories": ["1", "2", "3"],
-        "nullable": true
-      },
-      {
-        "name": "Sex",
-        "description": "Passenger Gender",
-        "dataType": "CATEGORICAL",
-        "categories": ["male", "female"],
-        "nullable": true
-      },
-      {
-        "name": "SibSp",
-        "description": "# of siblings / spouses aboard the Titanic",
+        "name": "texture_mean",
+        "description": "texture mean",
         "dataType": "NUMERIC",
-        "example": 1,
+        "example":23.0,
         "nullable": true
       },
       {
-        "name": "Parch",
-        "description": "# of parents / children aboard the Titanic",
-        "dataType": "CATEGORICAL",
-        "categories": ["0","1","2","3","4","5","6"],
-        "nullable": true
-      },
-      {
-        "name": "Fare",
-        "description": "Travel Cost",
+        "name": "perimeter_mean",
+        "description": "perimeter mean",
         "dataType": "NUMERIC",
-        "example": 120,
+        "example":23.0,
         "nullable": true
       },
       {
-        "name": "Embarked",
-        "description": "Port of Embarkation",
-        "dataType": "CATEGORICAL",
-        "categories": ["S","C","Q"],
+        "name": "area_mean",
+        "description": "area mean",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "smoothness_mean",
+        "description": "smoothness_mean",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "compactness_mean",
+        "description": "compactness_mean",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "concavity_mean",
+        "description": "concavity mean",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "concave points_mean",
+        "description": "concave points mean",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "symmetry_mean",
+        "description": "symmetry mean",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "fractal_dimension_mean",
+        "description": "fractal dimension mean",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "radius_se",
+        "description": "radius se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "texture_se",
+        "description": "texture se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "perimeter_se",
+        "description": "perimeter se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "area_se",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "smoothness_se",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "compactness_se",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "concavity_se",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "concave points_se",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "perimeter_worst",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "texture_worst",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "radius_worst",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "fractal_dimension_se",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "area_worst",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "symmetry_se",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "smoothness_worst",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "compactness_worst",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "concavity_worst",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "symmetry_worst",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "concave points_worst",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
+        "nullable": true
+      },
+      {
+        "name": "fractal_dimension_worst",
+        "description": "area se",
+        "dataType": "NUMERIC",
+        "example":23.0,
         "nullable": true
       }
       
     ]
   }
-
-
-
-  
