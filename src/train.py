@@ -89,12 +89,16 @@ def run_training(
 
         feature_selection_pipeline = Pipeline([('FeatureSelection',FeatureSelection())])
         feature_selection_pipeline.fit({"X_train":train_processed_data,"Y_train":train_targets})
-        # significant_features = feature_selection_pipeline.transform({"X_train":train_processed_data,"Y_train":train_targets})
+        significant_features = feature_selection_pipeline.transform({"X_train":train_processed_data,"Y_train":train_targets})
+        
+        if(len(significant_features)>=5):
+            train_processed_data = train_processed_data[significant_features]
+            val_processed_data = val_processed_data[significant_features]
 
-        # X_train = train_processed_data[significant_features]
-        # Y_train = train_targets
-        # X_val = val_processed_data[significant_features]
-        # Y_val = val_targets
+        X_train = train_processed_data
+        Y_train = train_targets
+        X_val = val_processed_data
+        Y_val = val_targets
 
         data_balancer_pipeline = Pipeline([('DataBalancer',DataBalancer())])
         data_balancer_pipeline.fit({"X_train":X_train,"Y_train":Y_train})

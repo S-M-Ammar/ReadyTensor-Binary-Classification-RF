@@ -1,11 +1,11 @@
-Error occurred during training. Error: "None of [Index([('Embarked_Q', 'Embarked_S', 'Parch_0', 'Parch_1', 'Parch_2', 'Parch_3', 'Age', 'Fare')], dtype='object')] are in the [columns]"
+Error occurred during training. Error: '<=' not supported between instances of 'SignificanceResult' and 'float'
 Traceback (most recent call last):
-  File "train.py", line 94, in run_training
-    X_train = train_processed_data[[significant_features]]
-  File "/Users/ammar/Library/Python/3.8/lib/python/site-packages/pandas/core/frame.py", line 3813, in __getitem__
-    indexer = self.columns._get_indexer_strict(key, "columns")[1]
-  File "/Users/ammar/Library/Python/3.8/lib/python/site-packages/pandas/core/indexes/base.py", line 6070, in _get_indexer_strict
-    self._raise_if_missing(keyarr, indexer, axis_name)
-  File "/Users/ammar/Library/Python/3.8/lib/python/site-packages/pandas/core/indexes/base.py", line 6130, in _raise_if_missing
-    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
-KeyError: "None of [Index([('Embarked_Q', 'Embarked_S', 'Parch_0', 'Parch_1', 'Parch_2', 'Parch_3', 'Age', 'Fare')], dtype='object')] are in the [columns]"
+  File "train.py", line 92, in run_training
+    significant_features = feature_selection_pipeline.transform({"X_train":train_processed_data,"Y_train":train_targets})
+  File "/Users/ammar/Library/Python/3.8/lib/python/site-packages/sklearn/pipeline.py", line 689, in transform
+    Xt = transform.transform(Xt)
+  File "/Users/ammar/Library/Python/3.8/lib/python/site-packages/sklearn/utils/_set_output.py", line 140, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "/Users/ammar/Ready Tensor/src/preprocessing_data/pipeline.py", line 226, in transform
+    if(p <=0.05):
+TypeError: '<=' not supported between instances of 'SignificanceResult' and 'float'
