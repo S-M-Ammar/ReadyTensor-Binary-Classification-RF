@@ -6,6 +6,7 @@ import joblib
 from skopt import gp_minimize
 from config import paths
 from logger import get_logger
+import os
 from skopt.utils import use_named_args
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
@@ -42,6 +43,11 @@ def run_hyperparameter_tuning(train_X , train_Y):
     # print("n_estimators : ",res_gp.x[0])
     # print("max_depth : ",res_gp.x[1])
     best_hyperparameters = {"n_estimators":res_gp.x[0] , "max_depth":res_gp.x[1] , "min_samples_split":res_gp.x[2] , "min_samples_leaf":res_gp.x[3] , "max_features":"log2" }
+    
+    # Making data hyper paramters directory
+    if not os.path.exists(paths.OPT_HPT_DIR_PATH):
+        os.makedirs(paths.OPT_HPT_DIR_PATH)
+    
     joblib.dump(best_hyperparameters,OPT_HPT_DIR_PATH+"/optimized_hyper_parameters.joblib")
     return best_hyperparameters
 

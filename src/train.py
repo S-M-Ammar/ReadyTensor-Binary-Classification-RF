@@ -31,6 +31,7 @@ def run_training(
   
     try:
         
+        # Making data preprocessing directory
         if not os.path.exists(paths.DATA_ARTIFACTS_DIR_PATH):
             os.makedirs(paths.DATA_ARTIFACTS_DIR_PATH)
 
