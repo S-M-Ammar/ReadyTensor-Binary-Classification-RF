@@ -3,7 +3,7 @@ https://python.plainenglish.io/data-validation-building-data-validating-classes-
 https://github.com/readytensor/rt_bin_class_decision_tree_sklearn_shapley/blob/main/src/train.py
 https://saturncloud.io/blog/how-to-put-customized-functions-in-sklearn-pipeline/
 
-
+docker run -p 8080:8080 readytensor:latest train -t  
 // {
       //   "name": "Sex",
       //   "description": "Passenger Gender",
