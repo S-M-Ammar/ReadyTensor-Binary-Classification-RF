@@ -15,7 +15,7 @@ PREDICTOR_FILE_NAME = "predictor.joblib"
 
 
 class Classifier:
-    """A wrapper class for the Decision Tree binary classifier.
+    """A wrapper class for the Random Forest binary classifier.
 
     This class provides a consistent interface that can be used with other
     classifier models.
@@ -32,7 +32,7 @@ class Classifier:
         max_features:Optional[str] = "log2",
         **kwargs,
     ):
-        """Construct a new Decision Tree binary classifier.
+        """Construct a new Random Forest binary classifier.
 
         Args:
             min_samples_split (int, optional): The minimum number of samples required
