@@ -21,16 +21,13 @@ Additionally, the implementation contains the following features:
 - **Static code analysis**: Code quality tests are implemented using **flake8**, **black**, **isort**, **safety**, and **radon**.
 - **Test automation**: Tox is used for test automation.
 ## Project Structure
-The following is the directory structure of the project:
-- **`examples/`**: This directory contains example files for the titanic dataset. Three files are included: `titanic_schema.json`, `titanic_train.csv` and `titanic_test.csv`. You can place these files in the `inputs/schema`, `inputs/data/training` and `inputs/data/testing` folders, respectively.
+You can place the data files in the `inputs/schema`, `inputs/data/training` and `inputs/data/testing` folders, respectively. Example: train.csv inside `inputs/data/training` , test.csv inside `inputs/data/testing` and schema.json inisde inputs/schema.
 - **`model_inputs_outputs/`**: This directory contains files that are either inputs to, or outputs from, the model. When running the model locally (i.e. without using docker), this directory is used for model inputs and outputs. This directory is further divided into:
   - **`/inputs/`**: This directory contains all the input files for this project, including the `data` and `schema` files. The `data` is further divided into `testing` and `training` subsets.
   - **`/model/artifacts/`**: This directory is used to store the model artifacts, such as trained models and their parameters.
   - **`/outputs/`**: The outputs directory contains sub-directories for error logs, and hyperparameter tuning outputs, and prediction results.
 - **`requirements/`**: This directory contains the requirements files. We have multiple requirements files for different purposes:
   - `requirements.txt` for the main code in the `src` directory
-  - `requirements_quality.txt` for dependencies related to code quality, safety, formatting and style checks.
-  - `requirements_text.txt` for dependencies required to run tests in the `tests` directory.
 - **`src/`**: This directory holds the source code for the project. It is further divided into various subdirectories:
   - **`config/`**: for configuration files for data preprocessing, model hyperparameters, hyperparameter tuning-configuration specs, paths, etc.
   - **`data_models/`**: for data models for input validation including the schema, training and test files, and the inference request data. It also contains the data model for the batch prediction results.
@@ -42,15 +39,9 @@ The following is the directory structure of the project:
   - **`serve.py`**: This script is used to serve the model as a REST API using **FastAPI**. It loads the artifacts and creates a FastAPI server to serve the model. It provides 3 endpoints: `/ping`, `/infer`, and `/explain`. The `/ping` endpoint is used to check if the server is running. The `/infer` endpoint is used to make predictions. The `/explain` endpoint is used to get local explanations for the predictions.
   - **`serve_utils.py`**: This script contains utility functions used by the `serve.py` script.
   - **`logger.py`**: This script contains the logger configuration using **logging** module.
-  - **`train.py`**: This script is used to train the model. It loads the data, preprocesses it, trains the model, and saves the artifacts in the path `./model_inputs_outputs/model/artifacts/`. It also saves a SHAP explainer object in the path `./model/artifacts/`. When the train task is run with a flag to perform hyperparameter tuning, it also saves the hyperparameter tuning results in the path `./model_inputs_outputs/outputs/hpt_outputs/`.
+  - **`train.py`**: This script is used to train the model. It loads the data, preprocesses it, trains the model, and saves the artifacts in the path `./model_inputs_outputs/model/artifacts/`. It also saves a SHAP explainer object in the path `./model/artifacts/`. When the train task is run with a flag to perform hyperparameter tuning, it also saves the hyperparameter tuning results in the path `./model_inputs_outputs/model/artifacts/optimized_hyper_parameters/`.
   - **`predict.py`**: This script is used to run batch predictions using the trained model. It loads the artifacts and creates and saves the predictions in a file called `predictions.csv` in the path `./model_inputs_outputs/outputs/predictions/`.
   - **`utils.py`**: This script contains utility functions used by the other scripts.
-- **`tests/`**: This directory contains all the tests for the project and associated resources and results.
-  - **`integration_tests/`**: This directory contains the integration tests for the project. We cover four main workflows: data preprocessing, training, prediction, and inference service.
-  - **`performance_tests/`**: This directory contains performance tests for the training and batch prediction workflows in the script `test_train_predict.py`. It also contains performance tests for the inference service workflow in the script `test_inference_apis.py`. Helper functions are defined in the script `performance_test_helpers.py`. Fixtures and other setup are contained in the script `conftest.py`.
-  - **`test_results/`**: This folder contains the results for the performance tests. These are persisted to disk for later analysis.
-  - **`unit_tests/`**: This folder contains all the unit tests for the project. It is further divided into subdirectories mirroring the structure of the `src` folder. Each subdirectory contains unit tests for the corresponding script in the `src` folder.
-- **`tmp/`**: This directory is used for storing temporary files which are not necessary to commit to the repository.
 - **`.dockerignore`**: This file specifies the files and folders that should be ignored by Docker.
 - **`.gitignore`**: This file specifies the files and folders that should be ignored by Git.
 - **`docker-compose.yaml`**: This file is used to define the services that make up the application. It is used by Docker Compose to run the application.
@@ -58,9 +49,8 @@ The following is the directory structure of the project:
 - **`entry_point.sh`**: This file is used as the entry point for the Docker container. It is used to run the application. When the container is run using one of the commands `train`, `predict` or `serve`, this script runs the corresponding script in the `src` folder to execute the task.
 - **`fix_line_endings.sh`**: This script is used to fix line endings in the project files. It is used to ensure that the project files have the correct line endings when the project is run on Windows.
 - **`LICENSE`**: This file contains the license for the project.
-- **`pytest.ini`**: This is the configuration file for pytest, the testing framework used in this project.
 - **`README.md`**: This file (this particular document) contains the documentation for the project, explaining how to set it up and use it.
-- **`tox.ini`**: This is the configuration file for tox, the primary test runner used in this project.
+
 ## Usage
 In this section we cover the following:
 - How to prepare your data for training and inference
