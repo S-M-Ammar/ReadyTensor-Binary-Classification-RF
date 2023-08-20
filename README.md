@@ -192,44 +192,15 @@ The server will respond with a JSON object containing the predicted probabilitie
 ```
 #### OpenAPI
 Since the service is implemented using FastAPI, we get automatic documentation of the APIs offered by the service. Visit the docs at `http://localhost:8080/docs`.
-## Testing
-### Running through Tox
-This project uses Tox for running tests. For this, you will need tox installed on your system. You can install tox using pip:
-```bash
-pip install tox
-```
-Once you have tox installed, you can run all tests by simply running the following command from the root of your project directory:
-```bash
-tox
-```
-This will run the tests as well as formatters `black` and `isort` and linter `flake8`. You can run tests corresponding to specific environment, or specific markers. Please check `tox.ini` file for configuration details.
-### Running through Pytest
-To run tests using pytest, first create a virtual environment and install the dependencies listed in the following three files located in the `requirements` directory`:
-- `requirements.txt`: for main dependencies
-- `requirements_test.txt`: for test dependencies
-- `requirements_quality.txt`: for dependencies related to code quality (formatting, linting, complexity, etc.)
-Once you have the dependencies installed, you can run the tests using the following command from the root of your project directory:
-```
-# Run all tests
-pytest
-# or, to run tests in a specific directory
-pytest <path_to_directory>
-# or, to run tests in a specific file
-pytest <path_to_file>
-# or, to run tests with a specific marker (such as `slow`, or `not slow`)
-pytest -m <marker_name>
-```
+
 ## Requirements
 The requirements files are placed in the folder `requirements`.
 Dependencies for the main model implementation in `src` are listed in the file `requirements.txt`.
-For testing, dependencies are listed in the file `requirements_test.txt`.
-Dependencies for quality-tests are listed in the file `requirements_quality.txt`. You can install these packages by running the following command from the root of your project directory:
+You can install these packages by running the following command from the root of your project directory:
 ```python
 pip install -r requirements/requirements.txt
-pip install -r requirements/requirements_test.txt
-pip install -r requirements/requirements_quality.txt
 ```
-Alternatively, you can let tox handle the installation of test dependencies for you for testing purposes. To do this, simply run the command `tox` from the root directory of the repository. This will create the environments, install dependencies, and run the tests as well as quality checks on the code.
+
 ## LICENSE
 This project is provided under the MIT License. Please see the [LICENSE](LICENSE) file for more information.
 ## Contact Information
