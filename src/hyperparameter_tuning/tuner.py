@@ -20,6 +20,12 @@ HPT_RESULTS_FILE_NAME = "HPT_results.csv"
 logger = get_logger(task_name="tune")
 
 
+"""
+    The following fucntion used sickit-optimization module for hyper parameter tuning of models.
+    We need to define the start and end range of integer or float (Real) hyper-parameters. This defined space 
+    is then used in cross fold validation for each model hyper parameter tuning.
+"""
+
 def run_hyperparameter_tuning(train_X , train_Y):
 
 
@@ -39,9 +45,7 @@ def run_hyperparameter_tuning(train_X , train_Y):
     rf = RandomForestClassifier(max_features="log2")
     res_gp = gp_minimize(objective, space, n_calls=100, random_state=42)
 
-    # print("Best Hyper Parameter : ")
-    # print("n_estimators : ",res_gp.x[0])
-    # print("max_depth : ",res_gp.x[1])
+
     best_hyperparameters = {"n_estimators":res_gp.x[0] , "max_depth":res_gp.x[1] , "min_samples_split":res_gp.x[2] , "min_samples_leaf":res_gp.x[3] , "max_features":"log2" }
     
     # Making data hyper paramters directory

@@ -4,6 +4,10 @@ import numpy as np
 from config import paths
 import json
 import os
+"""
+    Following are utility functions which are being used in custom data transformation pipelines.
+"""
+
 
 def save_correlated_features(correlated_features):
     try:
